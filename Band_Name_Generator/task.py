@@ -1,19 +1,27 @@
-import time
+import streamlit as st
 from transformers import pipeline
-from pyexpat import model
-# AI generator
-generator = pipeline("text-generation", model="distilgpt2")  # smaller, faster
+import time
 
-print("🎸 Welcome to the Band Name Generator 🎸")
+generator = pipeline("text-generation", model="gpt2")
 
-# User inputs
-city = input("Which city did you grow up in?\n").strip()
-pet = input("What is the name of your pet?\n").strip()
-language = input("Which language do you speak?\n").strip()
-word = input("Your most valuable word?\n").strip()
+st.title("🥁 Band Name Generator AI")
 
-# Basic deterministic band name
-basic_name = f"{city} {pet} {word}"
-print("\nYour basic band name:", basic_name)
+language = st.text_input("Which language do you speak?")
+city = st.text_input("Which city did you grow up in?")
+pet = st.text_input("What is your pet’s name?")
+word = st.text_input("Your most valuable word?")
+
+if st.button("Generate Band Name"):
+    prompt = (
+        f"Generate one short creative phrase using language={language}, city={city}, "
+        f"pet={pet}, and word={word}. Only the phrase."
+    )
+    result = generator(prompt, max_length=20, num_return_sequences=1)[0]['generated_text']
+
+    st.write("Your band name is...")
+    time.sleep(2)
+    st.success(f"🥁 {result.strip()} 🥁")
+
+
 
 
